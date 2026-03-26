@@ -1,0 +1,16 @@
+{
+  "services": [
+    {
+      "type": "web",
+      "runtime": "docker",
+      "name": "sushena",
+      "repo": "https://github.com/YOUR_USERNAME/sushena",
+      "envVars": [
+        {
+          "key": "GROQ_API_KEY",
+          "value": "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"
+        }
+      ]
+    }
+  ]
+}

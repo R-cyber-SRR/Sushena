@@ -1,0 +1,11 @@
+__pycache__
+*.pyc
+*.pyo
+.env
+.git
+.gitignore
+data/
+venv/
+*.db
+node_modules/
+.dockerignore

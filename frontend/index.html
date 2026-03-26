@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Sushena | AI Medical Coding</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <!-- Tailwind CSS Engine -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+          tailwind.config = {
+            darkMode: "class",
+            theme: {
+              extend: {
+                colors: {
+                  primary: "#002045",
+                  secondary: "#13696a",
+                  "surface-container": "#e5eeff",
+                  outline: "#74777f",
+                  error: "#ba1a1a",
+                  "on-surface": "#0b1c30",
+                  surface: "#f8f9ff"
+                },
+                fontFamily: {
+                  headline: ["Manrope"],
+                  body: ["Inter"],
+                  label: ["Inter"]
+                }
+              }
+            }
+          }
+    </script>
+    <style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; display: inline-block; line-height: 1; text-transform: none; letter-spacing: normal; word-wrap: normal; white-space: nowrap; direction: ltr; }
+        .hidden { display: none !important; }
+        .loader { border-top-color: #002045; border: 4px solid rgba(0,0,0,0.1); border-radius: 50%; width: 50px; height: 50px; animation: spinner 1.2s linear infinite; }
+        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface min-h-screen flex flex-col pt-16">
+
+<!-- Fixed Top Navbar -->
+<header class="bg-slate-50 shadow-sm fixed top-0 left-0 border-b-0 flex items-center justify-between px-6 py-3 w-full z-50">
+    <div class="flex items-center gap-3 cursor-pointer" onclick="showInputView()">
+        <img src="/Sushena.png" alt="Sushena Logo" class="w-9 h-9 rounded-lg object-contain"/>
+        <h1 class="text-xl font-bold text-blue-900 font-headline tracking-tight">Sushena</h1>
+    </div>
+    
+    <div class="flex items-center gap-4">
+        <div class="hidden md:flex items-center gap-3 bg-blue-50 px-3 py-1.5 border border-blue-200 rounded-full">
+            <span class="material-symbols-outlined text-secondary text-base">verified_user</span>
+            <span class="font-label text-xs font-bold text-primary uppercase tracking-wider">Compliance Active</span>
+        </div>
+        
+        <div id="auth-controls" class="flex items-center gap-3">
+            <button onclick="showAuthModal()" id="login-btn" class="bg-primary text-white px-4 py-1.5 rounded-full text-sm font-bold shadow hover:bg-blue-800 transition">Log In / Sign Up</button>
+            <div id="user-menu" class="hidden items-center gap-3">
+                <span id="user-email" class="text-sm font-bold text-gray-600"></span>
+                <button onclick="logout()" class="text-sm font-bold text-red-500 hover:text-red-700">Log Out</button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Auth Modal -->
+<div id="auth-modal" class="hidden fixed inset-0 bg-black/50 z-[100] flex items-center justify-center backdrop-blur-sm">
+    <div class="bg-white rounded-3xl p-8 w-full max-w-md shadow-2xl">
+        <div class="flex justify-between items-center mb-6">
+            <h2 id="auth-title" class="text-2xl font-headline font-bold text-primary">Welcome to Sushena</h2>
+            <button onclick="hideAuthModal()" class="text-gray-400 hover:text-gray-700"><span class="material-symbols-outlined">close</span></button>
+        </div>
+        
+        <form id="auth-form" onsubmit="handleAuthSubmit(event);" class="space-y-4">
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Email</label>
+                <input type="email" id="auth-email" required class="w-full p-3 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-secondary focus:border-secondary outline-none transition"/>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Password</label>
+                <input type="password" id="auth-password" required minlength="6" class="w-full p-3 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-secondary focus:border-secondary outline-none transition"/>
+            </div>
+            
+            <button type="submit" id="auth-submit-btn" class="w-full bg-primary text-white font-bold py-3 rounded-xl shadow-md hover:bg-blue-800 transition mt-2">Log In</button>
+            
+            <div class="text-center mt-4">
+                <p class="text-sm text-gray-500" id="auth-toggle-text">Don't have an account? <a href="#" onclick="toggleAuthMode()" class="text-secondary font-bold hover:underline">Register</a></p>
+            </div>
+            
+            <div class="flex items-center gap-3 py-2">
+                <div class="flex-1 h-px bg-gray-200"></div>
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">or</span>
+                <div class="flex-1 h-px bg-gray-200"></div>
+            </div>
+            
+            <button type="button" onclick="signInWithGoogle()" class="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 text-gray-700 font-bold py-3 rounded-xl hover:bg-gray-50 transition cursor-pointer">
+                <img src="https://www.google.com/favicon.ico" class="w-5 h-5"/>
+                Continue with Google
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Main Area -->
+<main class="flex-1 flex flex-col items-center justify-start p-6 md:p-12 max-w-7xl mx-auto w-full">
+
+    <!-- INPUT VIEW (From 1._case_selection_input & mediagent_clinical_intelligence_flow) -->
+    <div id="view-input" class="w-full grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        <div class="col-span-1 lg:col-span-12 mb-2">
+            <h2 class="font-headline text-5xl font-extrabold text-primary tracking-tight leading-tight">
+                Precision Input for <span class="text-transparent bg-clip-text bg-gradient-to-r from-secondary to-teal-400">Clinical Intelligence.</span>
+            </h2>
+            <p class="text-gray-600 max-w-xl text-lg mt-4 leading-relaxed font-body">
+                Convert unstructured clinical observations into strict structured records via AI-driven compliance routing.
+            </p>
+        </div>
+
+        <div class="col-span-1 lg:col-span-8 bg-white rounded-3xl p-8 shadow-sm border border-gray-100 flex flex-col h-[450px]">
+            <div class="flex items-center gap-2 mb-4 border-b pb-4">
+                <span class="material-symbols-outlined text-secondary">edit_note</span>
+                <span class="font-label text-sm font-bold text-primary uppercase tracking-widest">Input Clinical Note</span>
+            </div>
+            <textarea id="clinical_note_input" class="flex-1 p-2 bg-transparent text-lg border-none focus:ring-0 text-on-surface placeholder:text-gray-300 resize-none outline-none leading-relaxed" placeholder="Type or paste doctor's notes..."></textarea>
+            
+            <div class="mt-4 flex justify-between items-center bg-gray-50 -mx-8 -mb-8 px-8 py-5 border-t border-gray-100 rounded-b-3xl">
+                <button onclick="loadSample('Patient presents for routine screening. Performed comprehensive metabolic panel. Diagnoses: Essential Hypertension (I10).')" class="text-sm font-bold text-gray-500 hover:text-blue-600 transition">Clear / Reset</button>
+                <button onclick="processNote()" class="bg-gradient-to-r from-primary to-blue-800 px-8 py-3 rounded-2xl text-white font-bold flex items-center gap-3 shadow-lg hover:shadow-xl hover:scale-[1.02] transform transition-all">
+                    Process Note 
+                    <span class="material-symbols-outlined font-bold text-white">arrow_forward</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="col-span-1 lg:col-span-4 rounded-3xl p-6 bg-surface-container/50 border border-blue-100/50 space-y-4">
+            <h3 class="font-label text-xs font-bold text-primary uppercase tracking-widest flex items-center gap-2 mb-6">
+                <span class="material-symbols-outlined text-base">lightbulb</span> Select Use Case
+            </h3>
+            
+            <button onclick="loadSample('Patient presents for routine screening. Performed comprehensive metabolic panel. Diagnoses: Essential Hypertension (I10).')" class="w-full text-left p-5 rounded-2xl bg-white hover:bg-white hover:shadow-md transition border border-gray-200 border-l-4 hover:border-l-secondary flex flex-col gap-1 group">
+                <span class="font-bold text-sm text-primary">Standard Clear Case</span>
+                <span class="text-xs text-gray-500">Basic Extraction</span>
+            </button>
+            
+            <button onclick="loadSample('Performed diagnostic upper GI endoscopy. Also performed upper GI endoscopy with biopsy. No modifier 59 applied. Diagnoses: Gastro-esophageal reflux disease without esophagitis (K21.9).')" class="w-full text-left p-5 rounded-2xl bg-white hover:bg-white hover:shadow-md transition border border-gray-200 border-l-4 hover:border-l-error flex flex-col gap-1 group">
+                <span class="font-bold text-sm text-primary">High Risk Unbundling</span>
+                <span class="text-xs text-gray-500">NCCI Constraints Trigger</span>
+            </button>
+            
+            <button onclick="loadSample('Patient presents with headache. Ordered MRI Brain without contrast. Diagnoses: Headache (R51.9).')" class="w-full text-left p-5 rounded-2xl bg-white hover:bg-white hover:shadow-md transition border border-gray-200 border-l-4 hover:border-l-yellow-600 flex flex-col gap-1 group">
+                <span class="font-bold text-sm text-primary">Medical Necessity Conflict</span>
+                <span class="text-xs text-gray-500">PA &amp; LCD Review Focus</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- PROCESSING VIEW -->
+    <div id="view-loading" class="w-full flex-col items-center justify-center py-32 hidden">
+        <div class="loader mb-8"></div>
+        <h3 class="font-headline text-3xl font-extrabold text-primary mb-2">Multi-Agent Processing...</h3>
+        <p class="text-gray-500 max-w-md text-center text-lg">
+            Running inference through the Compliance Validator and Code Extractor agents...
+        </p>
+    </div>
+
+    <!-- RESULT VIEW (From 3._audit_results_dashboard) -->
+    <div id="view-result" class="w-full grid-cols-1 md:grid-cols-12 gap-8 hidden">
+        <div class="md:col-span-12 flex justify-between items-end mb-4 border-b border-gray-200 pb-6">
+            <div>
+                <span class="text-secondary font-label font-bold text-xs uppercase tracking-[0.2em] mb-2 block">Processing Complete</span>
+                <h2 class="text-4xl font-headline font-extrabold tracking-tight text-primary">Clinical Analysis Results</h2>
+            </div>
+            <button onclick="showInputView()" class="flex items-center gap-2 px-6 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 text-sm font-bold text-primary transition-colors">
+                <span class="material-symbols-outlined text-lg">refresh</span> Start New Audit
+            </button>
+        </div>
+
+        <div class="md:col-span-8 bg-white rounded-3xl p-8 shadow-sm border border-gray-200 relative overflow-hidden">
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <h3 class="text-xl font-headline font-bold text-primary">Structured Coding</h3>
+                    <p class="text-sm text-gray-500 mt-1">Extracted outputs paired against terminology constraints.</p>
+                </div>
+                <div id="auth-status-chip" class="bg-gray-100 text-gray-800 px-5 py-2.5 rounded-xl flex items-center gap-2 font-bold text-sm tracking-tight border">
+                    Prior Auth: <span id="auth-val">Checking...</span>
+                </div>
+            </div>
+            
+            <div id="codes-container" class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+
+        <!-- Compliance & Guardrails Matrix -->
+        <div class="md:col-span-4 bg-gradient-to-br from-primary to-[#1a365d] rounded-3xl p-8 text-white relative">
+            <div class="font-label text-xs font-bold text-blue-300 uppercase tracking-[0.2em] mb-4">Pipeline Status</div>
+            <div id="status-display" class="text-4xl font-headline font-extrabold mb-8 tracking-tighter">Approved</div>
+            
+            <div class="w-full h-px bg-white/20 mb-6"></div>
+            
+            <div class="font-label text-xs font-bold text-blue-300 uppercase tracking-widest mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">front_hand</span> Guardrail Engine
+            </div>
+            <ul id="guardrails-list" class="space-y-3 text-sm font-medium">
+                <!-- Dynamically populated -->
+            </ul>
+        </div>
+
+        <!-- Audit Trail -->
+        <div class="md:col-span-12 mt-4">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-2xl font-headline font-bold text-primary">Transparent Decision Trail</h3>
+                <span id="audit-count" class="text-sm font-bold text-gray-500 uppercase tracking-widest bg-gray-100 px-3 py-1 rounded-full">0 Steps Logged</span>
+            </div>
+            <div id="audit-trail-container" class="space-y-4">
+               <!-- Dynamically populated -->
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<!-- Firebase JS SDK (compat mode for simplicity) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+
+<script>
+// Firebase Configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyA44KSB5rEJfy57JRfcDcrhGyls3vAuFf0",
+    authDomain: "ethackathon-c2eeb.firebaseapp.com",
+    projectId: "ethackathon-c2eeb",
+    storageBucket: "ethackathon-c2eeb.firebasestorage.app",
+    messagingSenderId: "726679827299",
+    appId: "1:726679827299:web:75c21a86b72cd4c90c5956",
+    measurementId: "G-B2PSX49VDC"
+};
+
+firebase.initializeApp(firebaseConfig);
+const firebaseAuth = firebase.auth();
+const googleProvider = new firebase.auth.GoogleAuthProvider();
+
+// --- Utility Functions ---
+function loadSample(text) {
+    document.getElementById('clinical_note_input').value = text;
+}
+
+function showInputView() {
+    document.getElementById('view-input').classList.remove('hidden');
+    document.getElementById('view-input').classList.add('grid');
+    
+    document.getElementById('view-loading').classList.add('hidden');
+    document.getElementById('view-loading').classList.remove('flex');
+
+    document.getElementById('view-result').classList.add('hidden');
+    document.getElementById('view-result').classList.remove('grid');
+}
+
+// --- Firebase Auth State Listener ---
+firebaseAuth.onAuthStateChanged(async (user) => {
+    if (user) {
+        document.getElementById('login-btn').classList.add('hidden');
+        document.getElementById('user-menu').classList.remove('hidden');
+        document.getElementById('user-menu').classList.add('flex');
+        document.getElementById('user-email').textContent = user.email || user.displayName || "User";
+    } else {
+        document.getElementById('login-btn').classList.remove('hidden');
+        document.getElementById('user-menu').classList.add('hidden');
+        document.getElementById('user-menu').classList.remove('flex');
+    }
+});
+
+// --- Auth Modal ---
+let isRegistering = false;
+
+function showAuthModal() {
+    document.getElementById('auth-modal').classList.remove('hidden');
+}
+
+function hideAuthModal() {
+    document.getElementById('auth-modal').classList.add('hidden');
+}
+
+function toggleAuthMode() {
+    isRegistering = !isRegistering;
+    document.getElementById('auth-title').textContent = isRegistering ? "Create an Account" : "Welcome to Sushena";
+    document.getElementById('auth-submit-btn').textContent = isRegistering ? "Sign Up" : "Log In";
+    document.getElementById('auth-toggle-text').innerHTML = isRegistering 
+        ? 'Already have an account? <a href="#" onclick="toggleAuthMode()" class="text-secondary font-bold hover:underline">Log In</a>'
+        : 'Don\'t have an account? <a href="#" onclick="toggleAuthMode()" class="text-secondary font-bold hover:underline">Register</a>';
+}
+
+async function handleAuthSubmit(e) {
+    e.preventDefault();
+    const email = document.getElementById('auth-email').value;
+    const password = document.getElementById('auth-password').value;
+    const btn = document.getElementById('auth-submit-btn');
+    btn.disabled = true;
+    btn.textContent = "Processing...";
+
+    try {
+        if (isRegistering) {
+            await firebaseAuth.createUserWithEmailAndPassword(email, password);
+        } else {
+            await firebaseAuth.signInWithEmailAndPassword(email, password);
+        }
+        hideAuthModal();
+    } catch (err) {
+        alert("Authentication failed: " + err.message);
+    } finally {
+        btn.disabled = false;
+        btn.textContent = isRegistering ? "Sign Up" : "Log In";
+    }
+}
+
+let isSigningIn = false;
+async function signInWithGoogle() {
+    if (isSigningIn) return;
+    isSigningIn = true;
+    try {
+        await firebaseAuth.signInWithPopup(googleProvider);
+        hideAuthModal();
+    } catch (err) {
+        if (err.code !== 'auth/cancelled-popup-request' && err.code !== 'auth/popup-closed-by-user') {
+            alert("Google Sign-In failed: " + err.message);
+        }
+    } finally {
+        isSigningIn = false;
+    }
+}
+
+function logout() {
+    firebaseAuth.signOut();
+}
+
+// --- Process Clinical Note ---
+async function processNote() {
+    const note = document.getElementById('clinical_note_input').value.trim();
+    if (!note) {
+        alert("Clinical note field cannot be empty.");
+        return;
+    }
+
+    const user = firebaseAuth.currentUser;
+    if (!user) {
+        alert("You must be logged in to process clinical notes.");
+        showAuthModal();
+        return;
+    }
+
+    document.getElementById('view-input').classList.add('hidden');
+    document.getElementById('view-input').classList.remove('grid');
+
+    document.getElementById('view-loading').classList.remove('hidden');
+    document.getElementById('view-loading').classList.add('flex');
+
+    try {
+        // Get fresh Firebase ID token
+        const idToken = await user.getIdToken(true);
+
+        const response = await fetch('/api/process', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${idToken}`    
+            },
+            body: JSON.stringify({ clinical_note: note })
+        });
+
+        if (response.status === 401) {
+            alert("Session expired. Please log in again.");
+            firebaseAuth.signOut();
+            showInputView();
+            showAuthModal();
+            return;
+        }
+        
+        const resData = await response.json();
+        
+        if (!response.ok) {
+            alert("Execution Error: " + (resData.detail || "Server error"));
+            showInputView();
+            return;
+        }
+
+        renderResults(resData.data);
+    } catch (err) {
+        alert("Failed connecting to Sushena API backend: " + err);
+        showInputView();
+    }
+}
+
+// --- Render Results ---
+function renderResults(data) {
+    document.getElementById('view-loading').classList.add('hidden');
+    document.getElementById('view-loading').classList.remove('flex');
+    
+    document.getElementById('view-result').classList.remove('hidden');
+    document.getElementById('view-result').classList.add('grid');
+
+    document.getElementById('status-display').textContent = data.overall_status;
+    document.getElementById('status-display').className = data.overall_status === "Escalated to Human" 
+        ? "text-4xl font-headline font-extrabold mb-8 tracking-tighter text-red-400"
+        : "text-4xl font-headline font-extrabold mb-8 tracking-tighter text-green-400";
+        
+    const authChip = document.getElementById('auth-status-chip');
+    document.getElementById('auth-val').textContent = data.prior_auth_status;
+    
+    if (data.prior_auth_status === 'Approved') {
+        authChip.className = "bg-green-100 text-green-800 border-green-200 px-5 py-2.5 rounded-xl flex items-center gap-2 font-bold text-sm tracking-tight border";
+    } else if (data.prior_auth_status === 'Escalated') {
+        authChip.className = "bg-red-100 text-red-800 border-red-200 px-5 py-2.5 rounded-xl flex items-center gap-2 font-bold text-sm tracking-tight border";
+    } else {
+        authChip.className = "bg-yellow-100 text-yellow-800 border-yellow-200 px-5 py-2.5 rounded-xl flex items-center gap-2 font-bold text-sm tracking-tight border";
+    }
+
+    const gList = document.getElementById('guardrails-list');
+    gList.innerHTML = '';
+    
+    if (!data.guardrail_flags || data.guardrail_flags.length === 0) {
+        gList.innerHTML = `
+            <li class="flex items-center gap-3 text-white/50">
+                <span class="material-symbols-outlined text-xl">check</span>
+                No strict NCCI/CMS rules violated.
+            </li>`;
+    } else {
+        data.guardrail_flags.forEach(f => {
+            const li = document.createElement('li');
+            li.className = "flex items-start gap-3 text-red-300 bg-red-900/30 p-3 rounded-xl border border-red-500/20";
+            li.innerHTML = `
+                <span class="material-symbols-outlined text-xl">gavel</span>
+                <div>
+                   <div class="font-bold text-red-200 uppercase text-[10px] tracking-widest mb-1">Violation Triggered</div>
+                   ${f}
+                </div>
+            `;
+            gList.appendChild(li);
+        });
+    }
+
+    const cContainer = document.getElementById('codes-container');
+    cContainer.innerHTML = '';
+    
+    if (data.extracted_codes && data.extracted_codes.length > 0) {
+        data.extracted_codes.forEach(c => {
+            const icon = c.type === 'ICD-10' ? 'label' : 'medical_services';
+            cContainer.innerHTML += `
+                <div class="bg-gray-50 border border-gray-100 p-6 rounded-2xl flex flex-col justify-between group hover:border-blue-200 transition">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-blue-700 text-xl">${icon}</span>
+                        </div>
+                        <span class="font-label text-xs font-bold text-gray-500 uppercase tracking-widest">${c.type}</span>
+                    </div>
+                    <div class="text-3xl font-headline font-extrabold text-primary mb-2">
+                        ${c.code} ${c.modifier ? `<span class="text-lg text-secondary inline-block ml-1 bg-secondary/10 px-2 py-0.5 rounded uppercase tracking-tighter">-${c.modifier}</span>` : ''}
+                    </div>
+                    <div class="text-sm text-gray-600 font-medium">${c.description}</div>
+                </div>
+            `;
+        });
+    } else {
+        cContainer.innerHTML = `<div class="col-span-full py-8 text-center text-gray-400 font-semibold">No medical codes accurately identified.</div>`;
+    }
+
+    const audContainer = document.getElementById('audit-trail-container');
+    audContainer.innerHTML = '';
+    document.getElementById('audit-count').textContent = `${data.audit_trail.length} Logs Computed`;
+    
+    if (data.audit_trail) {
+        data.audit_trail.forEach((t, i) => {
+            audContainer.innerHTML += `
+                <div class="bg-white rounded-2xl overflow-hidden group border border-gray-100 hover:border-blue-200 hover:shadow-md transition-all">
+                    <div class="p-6">
+                        <div class="flex items-start gap-5">
+                            <div class="w-12 h-12 rounded-xl bg-blue-50/50 flex items-center justify-center border border-blue-100 shadow-sm shrink-0">
+                                <span class="material-symbols-outlined text-blue-600">psychology</span>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center gap-3 mb-1">
+                                    <span class="font-headline font-bold text-primary text-xl tracking-tight">${t.agent}</span>
+                                    <span class="bg-gray-100 text-gray-600 text-[10px] px-2 py-1 rounded uppercase font-bold tracking-tighter">Step ${i+1}</span>
+                                </div>
+                                <p class="text-sm text-gray-600 mb-3 font-semibold">${t.action}</p>
+                                
+                                <div class="bg-gray-50 border border-gray-100 rounded-xl p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <h4 class="font-bold text-[10px] uppercase tracking-widest text-secondary mb-1">Policy / Logic</h4>
+                                        <p class="text-sm text-primary font-medium">${t.rule_applied}</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-[10px] uppercase tracking-widest text-secondary mb-1">Decision Reason</h4>
+                                        <p class="text-sm text-primary italic">${t.reason}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    }
+}
+</script>
+</body>
+</html>
+

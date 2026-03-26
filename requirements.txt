@@ -1,0 +1,10 @@
+langgraph
+langchain-core
+langchain-ollama
+langchain-groq
+pydantic
+python-dotenv
+typing_extensions
+fastapi
+uvicorn
+firebase-admin

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MediAgent | Results &amp; Audit Dashboard</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary-fixed-variant": "#2d476f",
+              "surface-container": "#e5eeff",
+              "tertiary-fixed-dim": "#f2bc82",
+              "primary": "#002045",
+              "surface-bright": "#f8f9ff",
+              "surface-dim": "#cbdbf5",
+              "on-secondary-container": "#1a6d6e",
+              "surface-container-highest": "#d3e4fe",
+              "on-tertiary": "#ffffff",
+              "on-secondary": "#ffffff",
+              "on-error-container": "#93000a",
+              "secondary-fixed-dim": "#89d3d4",
+              "outline": "#74777f",
+              "on-tertiary-fixed": "#2b1700",
+              "secondary-fixed": "#a5eff0",
+              "surface-variant": "#d3e4fe",
+              "inverse-surface": "#213145",
+              "tertiary-fixed": "#ffddba",
+              "outline-variant": "#c4c6cf",
+              "tertiary-container": "#4f2e00",
+              "on-primary-container": "#86a0cd",
+              "on-background": "#0b1c30",
+              "on-secondary-fixed": "#002020",
+              "primary-container": "#1a365d",
+              "on-error": "#ffffff",
+              "on-secondary-fixed-variant": "#004f50",
+              "secondary-container": "#a2eded",
+              "on-tertiary-container": "#c6955e",
+              "surface-container-low": "#eff4ff",
+              "surface": "#f8f9ff",
+              "background": "#f8f9ff",
+              "inverse-on-surface": "#eaf1ff",
+              "surface-container-high": "#dce9ff",
+              "on-surface": "#0b1c30",
+              "primary-fixed": "#d6e3ff",
+              "on-surface-variant": "#43474e",
+              "surface-container-lowest": "#ffffff",
+              "primary-fixed-dim": "#adc7f7",
+              "error": "#ba1a1a",
+              "secondary": "#13696a",
+              "on-primary": "#ffffff",
+              "on-primary-fixed": "#001b3c",
+              "on-tertiary-fixed-variant": "#633f0f",
+              "tertiary": "#321b00",
+              "surface-tint": "#455f88",
+              "error-container": "#ffdad6",
+              "inverse-primary": "#adc7f7"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        display: inline-block;
+        line-height: 1;
+        text-transform: none;
+        letter-spacing: normal;
+        word-wrap: normal;
+        white-space: nowrap;
+        direction: ltr;
+      }
+      .tonal-transition { transition: background-color 0.2s ease; }
+      .glass-effect {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface antialiased pb-24">
+<!-- TopAppBar -->
+<header class="bg-slate-50 flex items-center justify-between px-6 py-3 w-full max-w-full docked full-width top-0 border-b-0 shadow-sm sticky z-50">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-blue-900" data-icon="clinical_notes">clinical_notes</span>
+<h1 class="text-xl font-bold text-blue-900 font-manrope font-semibold tracking-tight">MediAgent</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex items-center gap-6 mr-6">
+<a class="font-inter text-xs font-medium uppercase tracking-wider text-slate-500 hover:bg-slate-200/50 transition-colors px-3 py-1 rounded" href="#">Input</a>
+<a class="font-inter text-xs font-medium uppercase tracking-wider text-slate-500 hover:bg-slate-200/50 transition-colors px-3 py-1 rounded" href="#">Workflow</a>
+<a class="font-inter text-xs font-medium uppercase tracking-wider text-slate-500 hover:bg-slate-200/50 transition-colors px-3 py-1 rounded" href="#">Audit</a>
+<a class="font-inter text-xs font-medium uppercase tracking-wider text-blue-900 border-b-2 border-teal-600 px-3 py-1" href="#">Results</a>
+</div>
+<div class="flex items-center gap-2 bg-secondary-container/30 px-3 py-1 rounded-full">
+<span class="material-symbols-outlined text-secondary text-sm" data-icon="verified_user" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="text-xs font-bold text-secondary uppercase tracking-widest">Compliance: Active</span>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-6 pt-10">
+<!-- Dashboard Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+<div>
+<span class="text-secondary font-label font-bold text-xs uppercase tracking-[0.2em] mb-2 block">Processing Complete</span>
+<h2 class="text-4xl font-headline font-extrabold tracking-tight text-primary">Analysis Results</h2>
+<p class="text-on-surface-variant mt-2 max-w-xl">Final clinical determination for Case ID: <span class="font-mono text-primary font-semibold">#MD-8821-X</span>. All criteria evaluated against federal and private payer guidelines.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-outline-variant hover:bg-surface-container-low transition-colors text-sm font-semibold text-primary">
+<span class="material-symbols-outlined text-lg" data-icon="download">download</span>
+                    Download JSON Audit Log
+                </button>
+<button class="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-br from-primary to-primary-container text-white text-sm font-semibold shadow-lg hover:shadow-primary/20 transition-all active:scale-95">
+<span class="material-symbols-outlined text-lg" data-icon="description">description</span>
+                    Generate Report
+                </button>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<!-- Final Output Card (Primary) -->
+<div class="md:col-span-8 bg-surface-container-lowest rounded-full p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden">
+<div class="absolute top-0 right-0 w-64 h-64 bg-secondary-container/10 rounded-full -mr-20 -mt-20 blur-3xl"></div>
+<div class="relative z-10">
+<div class="flex items-start justify-between mb-8">
+<div>
+<h3 class="text-lg font-headline font-bold text-primary mb-1">Coding Recommendation</h3>
+<p class="text-sm text-on-surface-variant">Validated ICD-10 &amp; CPT pairing</p>
+</div>
+<div class="bg-secondary/10 text-secondary px-4 py-2 rounded-xl flex items-center gap-2">
+<span class="material-symbols-outlined text-lg" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-bold text-sm tracking-tight">Prior Auth Status: Approved</span>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+<!-- ICD-10 Card -->
+<div class="bg-surface-container-low p-6 rounded-xl border-b-2 border-secondary/20">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-xl" data-icon="label">label</span>
+</div>
+<span class="font-label text-xs font-bold text-on-surface-variant uppercase tracking-widest">ICD-10-CM</span>
+</div>
+<div class="text-3xl font-headline font-extrabold text-primary mb-1">M17.11</div>
+<div class="text-sm text-on-surface-variant font-medium">Unilateral primary osteoarthritis, right knee</div>
+</div>
+<!-- CPT Card -->
+<div class="bg-surface-container-low p-6 rounded-xl border-b-2 border-secondary/20">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-xl" data-icon="medical_services">medical_services</span>
+</div>
+<span class="font-label text-xs font-bold text-on-surface-variant uppercase tracking-widest">CPT Code</span>
+</div>
+<div class="text-3xl font-headline font-extrabold text-primary mb-1">27447</div>
+<div class="text-sm text-on-surface-variant font-medium">Arthroplasty, knee, condyle and plateau</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Compliance Score Card -->
+<div class="md:col-span-4 bg-primary-container rounded-full p-8 text-white flex flex-col items-center justify-center text-center relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-tr from-primary to-secondary/30 opacity-50"></div>
+<div class="relative z-10">
+<div class="font-label text-xs font-bold text-on-primary-container uppercase tracking-[0.3em] mb-6">Compliance Score</div>
+<div class="relative inline-flex items-center justify-center mb-6">
+<svg class="w-32 h-32 transform -rotate-90">
+<circle class="text-primary" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-secondary-fixed transition-all duration-1000 ease-out" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-dasharray="364.4" stroke-dashoffset="7.2" stroke-width="8"></circle>
+</svg>
+<span class="absolute text-4xl font-headline font-extrabold">98</span>
+</div>
+<p class="text-sm text-on-primary-container max-w-[200px] leading-relaxed">High confidence match based on clinical documentation audit.</p>
+</div>
+</div>
+<!-- Audit Trail Section -->
+<div class="md:col-span-12 mt-4">
+<div class="flex items-center justify-between mb-6 px-2">
+<h3 class="text-2xl font-headline font-bold text-primary">Decision Audit Trail</h3>
+<div class="flex items-center gap-2 text-on-surface-variant text-sm font-medium">
+<span class="material-symbols-outlined text-lg" data-icon="history">history</span>
+<span>4 automated checks performed</span>
+</div>
+</div>
+<div class="space-y-4">
+<!-- Audit Entry 1 -->
+<div class="bg-white rounded-xl overflow-hidden group border-l-4 border-secondary transition-all hover:shadow-md">
+<div class="p-5 flex items-center justify-between cursor-pointer">
+<div class="flex items-center gap-5">
+<div class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" data-icon="fact_check">fact_check</span>
+</div>
+<div>
+<div class="flex items-center gap-3">
+<span class="font-headline font-bold text-primary">CMS NCD 150.7: Criteria Met</span>
+<span class="bg-secondary-container/40 text-on-secondary-container text-[10px] px-2 py-0.5 rounded uppercase font-bold tracking-tighter">Verified</span>
+</div>
+<p class="text-sm text-on-surface-variant mt-0.5">Automated validation of medical necessity for knee arthroplasty.</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-y-0.5 transition-transform" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<!-- Audit Entry 2 -->
+<div class="bg-white rounded-xl overflow-hidden group border-l-4 border-secondary transition-all hover:shadow-md">
+<div class="p-5 flex items-center justify-between cursor-pointer">
+<div class="flex items-center gap-5">
+<div class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" data-icon="rule">rule</span>
+</div>
+<div>
+<div class="flex items-center gap-3">
+<span class="font-headline font-bold text-primary">LCD L33618: Documentation Sufficiency</span>
+<span class="bg-secondary-container/40 text-on-secondary-container text-[10px] px-2 py-0.5 rounded uppercase font-bold tracking-tighter">Verified</span>
+</div>
+<p class="text-sm text-on-surface-variant mt-0.5">Confirms presence of radiographic evidence of significant joint disease.</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="expand_more">expand_more</span>
+</div>
+<!-- Expanded Content Example (Hidden by default in static mockup but styled) -->
+<div class="bg-surface-container-low/50 px-20 py-6 border-t border-outline-variant/10">
+<div class="grid grid-cols-2 gap-8 text-sm">
+<div>
+<h4 class="font-bold text-xs uppercase tracking-widest text-secondary mb-3">Cited Evidence</h4>
+<p class="italic text-on-surface-variant mb-4">"Right knee X-ray (05/12/2023): Severe medial compartment narrowing with osteophyte formation."</p>
+<div class="flex items-center gap-2 text-primary font-semibold">
+<span class="material-symbols-outlined text-base" data-icon="link">link</span>
+                                        Reference: Radiology Report #882
+                                    </div>
+</div>
+<div>
+<h4 class="font-bold text-xs uppercase tracking-widest text-secondary mb-3">Agent Reasoning</h4>
+<p class="text-on-surface-variant leading-relaxed">The agent extracted key radiographic indicators that align with LCD L33618 Section 4.A (Advanced Osteoarthritis). Confidence level for this extraction is 0.99.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Audit Entry 3 -->
+<div class="bg-white rounded-xl overflow-hidden group border-l-4 border-outline-variant/30 transition-all hover:shadow-md">
+<div class="p-5 flex items-center justify-between cursor-pointer">
+<div class="flex items-center gap-5">
+<div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="warning">warning</span>
+</div>
+<div>
+<div class="flex items-center gap-3">
+<span class="font-headline font-bold text-primary">Unspecified Modifier Alert</span>
+<span class="bg-surface-container text-on-surface-variant text-[10px] px-2 py-0.5 rounded uppercase font-bold tracking-tighter">Observation</span>
+</div>
+<p class="text-sm text-on-surface-variant mt-0.5">Modifier 50 (Bilateral) excluded based on unilateral diagnosis M17.11.</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Metadata / Context Area -->
+<div class="md:col-span-12 grid grid-cols-1 sm:grid-cols-3 gap-6 mt-6">
+<div class="bg-white p-6 rounded-xl shadow-sm border border-outline-variant/5">
+<span class="text-[10px] font-bold uppercase tracking-widest text-secondary mb-2 block">Agent Processing Time</span>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="timer">timer</span>
+<span class="text-2xl font-headline font-bold text-primary">1.42s</span>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl shadow-sm border border-outline-variant/5">
+<span class="text-[10px] font-bold uppercase tracking-widest text-secondary mb-2 block">Knowledge Base Version</span>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="database">database</span>
+<span class="text-2xl font-headline font-bold text-primary">v24.2.1</span>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl shadow-sm border border-outline-variant/5">
+<span class="text-[10px] font-bold uppercase tracking-widest text-secondary mb-2 block">Token Usage</span>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="token">token</span>
+<span class="text-2xl font-headline font-bold text-primary">3,104</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center pb-safe pt-2 px-4 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md shadow-[0_-4px_24px_rgba(0,0,0,0.06)] border-t border-slate-200/20">
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-6 py-1 hover:text-blue-800 dark:hover:text-blue-200 transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="input">input</span>
+<span class="font-inter text-xs font-medium uppercase tracking-wider mt-1">Input</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-6 py-1 hover:text-blue-800 dark:hover:text-blue-200 transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+<span class="font-inter text-xs font-medium uppercase tracking-wider mt-1">Workflow</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-6 py-1 hover:text-blue-800 dark:hover:text-blue-200 transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="fact_check">fact_check</span>
+<span class="font-inter text-xs font-medium uppercase tracking-wider mt-1">Audit</span>
+</a>
+<a class="flex flex-col items-center justify-center text-teal-700 dark:text-teal-300 bg-teal-50 dark:bg-teal-900/30 rounded-xl px-6 py-1 transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="analytics" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<span class="font-inter text-xs font-medium uppercase tracking-wider mt-1">Results</span>
+</a>
+</nav>
+<!-- Contextual FAB for New Case -->
+<div class="fixed bottom-24 right-8 z-40">
+<button class="w-14 h-14 bg-gradient-to-tr from-secondary to-on-secondary-container text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-transform group">
+<span class="material-symbols-outlined text-3xl" data-icon="add">add</span>
+<div class="absolute right-full mr-4 bg-primary text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                Process New Case
+            </div>
+</button>
+</div>
+</body></html>

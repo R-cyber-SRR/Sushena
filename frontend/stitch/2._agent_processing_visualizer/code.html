@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MediAgent | Agent Processing Visualizer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary-fixed-variant": "#2d476f",
+              "surface-container": "#e5eeff",
+              "tertiary-fixed-dim": "#f2bc82",
+              "primary": "#002045",
+              "surface-bright": "#f8f9ff",
+              "surface-dim": "#cbdbf5",
+              "on-secondary-container": "#1a6d6e",
+              "surface-container-highest": "#d3e4fe",
+              "on-tertiary": "#ffffff",
+              "on-secondary": "#ffffff",
+              "on-error-container": "#93000a",
+              "secondary-fixed-dim": "#89d3d4",
+              "outline": "#74777f",
+              "on-tertiary-fixed": "#2b1700",
+              "secondary-fixed": "#a5eff0",
+              "surface-variant": "#d3e4fe",
+              "inverse-surface": "#213145",
+              "tertiary-fixed": "#ffddba",
+              "outline-variant": "#c4c6cf",
+              "tertiary-container": "#4f2e00",
+              "on-primary-container": "#86a0cd",
+              "on-background": "#0b1c30",
+              "on-secondary-fixed": "#002020",
+              "primary-container": "#1a365d",
+              "on-error": "#ffffff",
+              "on-secondary-fixed-variant": "#004f50",
+              "secondary-container": "#a2eded",
+              "on-tertiary-container": "#c6955e",
+              "surface-container-low": "#eff4ff",
+              "surface": "#f8f9ff",
+              "background": "#f8f9ff",
+              "inverse-on-surface": "#eaf1ff",
+              "surface-container-high": "#dce9ff",
+              "on-surface": "#0b1c30",
+              "primary-fixed": "#d6e3ff",
+              "on-surface-variant": "#43474e",
+              "surface-container-lowest": "#ffffff",
+              "primary-fixed-dim": "#adc7f7",
+              "error": "#ba1a1a",
+              "secondary": "#13696a",
+              "on-primary": "#ffffff",
+              "on-primary-fixed": "#001b3c",
+              "on-tertiary-fixed-variant": "#633f0f",
+              "tertiary": "#321b00",
+              "surface-tint": "#455f88",
+              "error-container": "#ffdad6",
+              "inverse-primary": "#adc7f7"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tonal-transition {
+            transition: background-color 0.3s ease;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .pulse-teal {
+            box-shadow: 0 0 0 0 rgba(44, 122, 123, 0.4);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(44, 122, 123, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(44, 122, 123, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(44, 122, 123, 0); }
+        }
+        .timeline-dash {
+            background-image: linear-gradient(to bottom, #c4c6cf 50%, transparent 50%);
+            background-size: 2px 10px;
+            background-repeat: repeat-y;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- TopAppBar -->
+<header class="bg-slate-50 dark:bg-slate-900 shadow-sm dark:shadow-none docked full-width top-0 border-b-0 flex items-center justify-between px-6 py-3 w-full max-w-full sticky z-50">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-blue-900 dark:text-blue-400" data-icon="clinical_notes">clinical_notes</span>
+<h1 class="text-xl font-bold text-blue-900 dark:text-blue-100 font-manrope font-semibold tracking-tight">MediAgent</h1>
+</div>
+<div class="flex items-center gap-4">
+<span class="px-3 py-1 bg-secondary-container/40 text-on-secondary-container text-xs font-medium rounded-full flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+                Compliance: Active
+            </span>
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined text-sm" data-icon="account_circle">account_circle</span>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-6 pt-10 pb-32">
+<!-- Workflow Status Header -->
+<section class="mb-12">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+<div>
+<h2 class="text-3xl font-headline font-extrabold tracking-tight text-primary mb-2">Workflow Status</h2>
+<p class="text-on-surface-variant font-medium">Batch ID: #PX-99201 • Prior Authorization Pipeline</p>
+</div>
+<div class="w-full md:w-96">
+<div class="flex justify-between items-center mb-2">
+<span class="text-sm font-label font-semibold text-primary uppercase tracking-widest">Total Progress</span>
+<span class="text-sm font-label font-bold text-secondary">64%</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-secondary w-[64%] rounded-full"></div>
+</div>
+</div>
+</div>
+<!-- Bento Grid - Agent Visualizer -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Agent 1: Medical Coder Agent (Completed) -->
+<div class="relative group">
+<div class="absolute -left-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-secondary text-white flex items-center justify-center z-10 shadow-lg">
+<span class="material-symbols-outlined text-lg" data-icon="check">check</span>
+</div>
+<div class="h-full bg-surface-container-lowest border-l-4 border-secondary p-8 rounded-xl shadow-sm transition-all duration-300 hover:shadow-md">
+<div class="flex justify-between items-start mb-6">
+<div>
+<span class="text-[10px] font-label font-bold text-secondary uppercase tracking-[0.2em] block mb-1">Status: ✅ Completed</span>
+<h3 class="text-xl font-headline font-bold text-primary">Medical Coder Agent</h3>
+</div>
+<span class="material-symbols-outlined text-secondary-container text-4xl" data-icon="description">description</span>
+</div>
+<div class="space-y-4">
+<div class="p-4 bg-surface-container-low rounded-lg border border-outline-variant/10">
+<h4 class="text-xs font-label font-bold text-on-surface-variant uppercase mb-3">Reasoning Log</h4>
+<div class="font-body text-sm text-on-surface leading-relaxed space-y-2">
+<p class="flex items-start gap-2">
+<span class="text-secondary font-mono">›</span>
+<span>Analyzing clinical narrative for primary diagnosis...</span>
+</p>
+<p class="flex items-start gap-2">
+<span class="text-secondary font-mono">›</span>
+<span class="font-semibold text-primary">Identified ICD-10: M17.12</span>
+</p>
+<p class="flex items-start gap-2">
+<span class="text-secondary font-mono">›</span>
+<span>Cross-referencing CPT 27447 with surgical notes.</span>
+</p>
+</div>
+</div>
+<div class="flex gap-2">
+<span class="px-2 py-1 bg-surface-container text-on-surface-variant text-[10px] font-bold rounded uppercase">ICD-10-CM</span>
+<span class="px-2 py-1 bg-surface-container text-on-surface-variant text-[10px] font-bold rounded uppercase">CPT-4</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Agent 2: Policy Validator Agent (Processing) -->
+<div class="relative group">
+<div class="absolute -left-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center z-10 shadow-lg pulse-teal">
+<span class="material-symbols-outlined text-lg animate-spin" data-icon="sync" style="animation-duration: 3s;">sync</span>
+</div>
+<!-- Connector line to next card -->
+<div class="hidden lg:block absolute -right-4 top-1/2 w-8 h-[2px] bg-outline-variant/30 z-0"></div>
+<div class="h-full bg-white border-l-4 border-primary p-8 rounded-xl shadow-xl ring-1 ring-primary/5 transition-all duration-300">
+<div class="flex justify-between items-start mb-6">
+<div>
+<span class="text-[10px] font-label font-bold text-primary uppercase tracking-[0.2em] block mb-1">Status: 🔄 Processing...</span>
+<h3 class="text-xl font-headline font-bold text-primary">Policy Validator Agent</h3>
+</div>
+<span class="material-symbols-outlined text-primary-fixed-dim text-4xl" data-icon="policy">policy</span>
+</div>
+<div class="space-y-4">
+<div class="p-4 bg-primary-container text-on-primary-container rounded-lg shadow-inner">
+<h4 class="text-xs font-label font-bold text-on-primary-container/60 uppercase mb-3">Active Reasoning</h4>
+<div class="font-body text-sm leading-relaxed space-y-2">
+<p class="flex items-start gap-2">
+<span class="text-secondary-fixed-dim font-mono">›</span>
+<span>Fetching CMS LCD L33618 (Knee Arthroplasty)...</span>
+</p>
+<p class="flex items-start gap-2">
+<span class="text-secondary-fixed-dim font-mono">›</span>
+<span class="italic">Verifying 3-month conservative therapy requirement.</span>
+</p>
+<p class="flex items-start gap-2 overflow-hidden">
+<span class="text-secondary-fixed-dim font-mono">›</span>
+<span class="animate-pulse">Validating BMI and smoking status against NCD 280.1...</span>
+</p>
+</div>
+</div>
+<div class="h-1 w-full bg-primary-container/30 rounded-full overflow-hidden">
+<div class="h-full bg-secondary-fixed-dim w-3/4 rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Agent 3: Auth Engine Agent (Pending) -->
+<div class="relative group">
+<div class="absolute -left-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-surface-dim text-on-surface-variant flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-lg" data-icon="hourglass_empty">hourglass_empty</span>
+</div>
+<div class="h-full bg-surface-container-low border-l-4 border-outline-variant p-8 rounded-xl transition-all duration-300 opacity-80">
+<div class="flex justify-between items-start mb-6">
+<div>
+<span class="text-[10px] font-label font-bold text-on-surface-variant uppercase tracking-[0.2em] block mb-1">Status: ⏳ Pending</span>
+<h3 class="text-xl font-headline font-bold text-on-surface-variant">Auth Engine Agent</h3>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-4xl" data-icon="account_tree">account_tree</span>
+</div>
+<div class="space-y-4">
+<div class="p-4 bg-surface-container-lowest rounded-lg border border-dashed border-outline-variant">
+<h4 class="text-xs font-label font-bold text-outline uppercase mb-3">Queue Logic</h4>
+<div class="font-body text-sm text-outline leading-relaxed italic">
+                                    Waiting for validation results to execute decision tree branches...
+                                </div>
+</div>
+<div class="flex items-center gap-2 text-xs font-label font-medium text-outline">
+<span class="material-symbols-outlined text-sm" data-icon="lock">lock</span>
+                                Encrypted Decision Matrix
+                            </div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Secondary Content Area: Detailed Audit & Observations -->
+<section class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+<!-- Real-time Audit Log -->
+<div class="bg-surface-container-low rounded-xl p-8 border-none">
+<div class="flex justify-between items-center mb-8">
+<h3 class="text-lg font-headline font-bold text-primary">Live Audit Stream</h3>
+<button class="text-secondary text-xs font-bold uppercase tracking-wider hover:underline">View Full Log</button>
+</div>
+<div class="space-y-8 relative">
+<!-- Vertical line for timeline -->
+<div class="absolute left-2.5 top-2 bottom-2 w-[1px] timeline-dash"></div>
+<div class="relative pl-10">
+<div class="absolute left-0 top-1 w-5 h-5 rounded-full bg-secondary ring-4 ring-surface-container-low flex items-center justify-center">
+<span class="w-2 h-2 rounded-full bg-white"></span>
+</div>
+<div class="flex justify-between mb-1">
+<span class="text-sm font-bold text-primary">14:20:01</span>
+<span class="text-[10px] font-bold text-secondary uppercase tracking-widest">Coder Success</span>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed">Medical Coder Agent finalized CPT extraction. Accuracy confidence: 98.4%.</p>
+</div>
+<div class="relative pl-10">
+<div class="absolute left-0 top-1 w-5 h-5 rounded-full bg-primary ring-4 ring-surface-container-low flex items-center justify-center">
+<span class="w-2 h-2 rounded-full bg-white"></span>
+</div>
+<div class="flex justify-between mb-1">
+<span class="text-sm font-bold text-primary">14:20:05</span>
+<span class="text-[10px] font-bold text-primary uppercase tracking-widest">Validator Active</span>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed">Policy Validator Agent initiated CMS rule fetch for regional MAC: Palmetto GBA.</p>
+</div>
+<div class="relative pl-10">
+<div class="absolute left-0 top-1 w-5 h-5 rounded-full bg-surface-dim ring-4 ring-surface-container-low flex items-center justify-center">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+</div>
+<div class="flex justify-between mb-1 opacity-50">
+<span class="text-sm font-bold text-primary">Pending</span>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Awaiting Decision</span>
+</div>
+<p class="text-sm text-on-surface-variant/60 leading-relaxed italic">Auth Engine Agent queued for validation handshake.</p>
+</div>
+</div>
+</div>
+<!-- Contextual Insights Card -->
+<div class="bg-primary-container rounded-xl p-8 relative overflow-hidden group">
+<!-- Abstract medical imagery as background -->
+<div class="absolute inset-0 opacity-10 pointer-events-none">
+<img alt="abstract neural network with clinical data nodes" class="w-full h-full object-cover" data-alt="abstract digital neural network overlaying a medical DNA helix structure with a dark blue and teal cinematic lighting and soft grain texture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAM-hkSCsOJ_hsZ8HN0ABjpuHerno7Pw7BbMNW8478JByomATUr1BRmCeiTEqHKFp2nLeNQgTaHuDjn6x-Yy7-0wtWSzIXHCvaZYgOF63nda6iplAV5wPln5KnwJHDKOGiEp5AzuMfFD-FDc4jcyvjHfJM7gXQowc-idPodL8250ae9NKt4cihR_aUh4lQhCi6NHaiWeEsx-woEk5Y3PHA_z2DX67Wuoq6aYRoRsfQA97H8EXPc6s564YuabSzjvaUyqKTHbykThQ"/>
+</div>
+<div class="relative z-10">
+<h3 class="text-lg font-headline font-bold text-white mb-6">Agent Insight Summary</h3>
+<div class="space-y-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center text-secondary-fixed">
+<span class="material-symbols-outlined text-2xl" data-icon="bolt">bolt</span>
+</div>
+<div>
+<p class="text-white font-bold text-sm">Processing Speed: Optimal</p>
+<p class="text-secondary-fixed-dim text-xs">840ms latency detected in policy retrieval.</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-white/10 flex items-center justify-center text-secondary-fixed">
+<span class="material-symbols-outlined text-2xl" data-icon="rule">rule</span>
+</div>
+<div>
+<p class="text-white font-bold text-sm">Rule Accuracy: High</p>
+<p class="text-secondary-fixed-dim text-xs">Zero discrepancies found in ICD-10 crosswalk.</p>
+</div>
+</div>
+<div class="mt-8 pt-8 border-t border-white/10">
+<button class="w-full py-3 bg-gradient-to-r from-secondary to-on-secondary-container text-white font-bold rounded-md shadow-lg transition-transform active:scale-95">
+                                Pause All Agents
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center pb-safe pt-2 px-4 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md shadow-[0_-4px_24px_rgba(0,0,0,0.06)] fixed bottom-0 w-full border-t border-slate-200/20 md:hidden">
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-6 py-1">
+<span class="material-symbols-outlined" data-icon="input">input</span>
+<span class="font-inter text-xs font-medium uppercase tracking-wider">Input</span>
+</div>
+<div class="flex flex-col items-center justify-center text-teal-700 dark:text-teal-300 bg-teal-50 dark:bg-teal-900/30 rounded-xl px-6 py-1">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+<span class="font-inter text-xs font-medium uppercase tracking-wider">Workflow</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-6 py-1">
+<span class="material-symbols-outlined" data-icon="fact_check">fact_check</span>
+<span class="font-inter text-xs font-medium uppercase tracking-wider">Audit</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-6 py-1">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-inter text-xs font-medium uppercase tracking-wider">Results</span>
+</div>
+</nav>
+<!-- Desktop Sidebar/Nav Placeholder -->
+<div class="hidden md:block fixed left-6 top-32 space-y-4">
+<div class="w-12 h-12 bg-surface-container-highest flex items-center justify-center rounded-xl text-primary cursor-pointer hover:bg-primary hover:text-white transition-all group relative">
+<span class="material-symbols-outlined" data-icon="input">input</span>
+<span class="absolute left-16 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Input</span>
+</div>
+<div class="w-12 h-12 bg-primary flex items-center justify-center rounded-xl text-white cursor-pointer group relative">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+<span class="absolute left-16 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Workflow</span>
+</div>
+<div class="w-12 h-12 bg-surface-container-highest flex items-center justify-center rounded-xl text-primary cursor-pointer hover:bg-primary hover:text-white transition-all group relative">
+<span class="material-symbols-outlined" data-icon="fact_check">fact_check</span>
+<span class="absolute left-16 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Audit</span>
+</div>
+<div class="w-12 h-12 bg-surface-container-highest flex items-center justify-center rounded-xl text-primary cursor-pointer hover:bg-primary hover:text-white transition-all group relative">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="absolute left-16 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Results</span>
+</div>
+</div>
+</body></html>
