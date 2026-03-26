@@ -1,0 +1,34 @@
+{
+  "cpt_bundles": [
+    {
+      "comprehensive_code": "43239",
+      "component_code": "43235",
+      "rationale": "Upper GI endoscopy with biopsy (43239) includes diagnostic upper GI endoscopy (43235)."
+    },
+    {
+      "comprehensive_code": "93452",
+      "component_code": "93451",
+      "rationale": "Left heart catheterization includes right heart catheterization if performed together."
+    }
+  ],
+  "cms_lcd_ncd": [
+    {
+      "policy_id": "LCD_L34000",
+      "procedure_code": "80053",
+      "allowed_diagnoses": ["E11.9", "I10", "Z79.4", "Z79.899"],
+      "rationale": "Comprehensive metabolic panel must be linked to a covered medical necessity such as Diabetes or Hypertension."
+    },
+    {
+      "policy_id": "NCD_20.19",
+      "procedure_code": "70551",
+      "allowed_diagnoses": ["C71.9", "G35", "R56.9", "G40.909"],
+      "requires_prior_auth": true,
+      "rationale": "MRI Brain without contrast requires prior authorization for non-emergency indications."
+    }
+  ],
+  "modifiers": {
+    "25": "Significant, separately identifiable evaluation and management service by the same physician on the same day of the procedure or other service.",
+    "59": "Distinct procedural service.",
+    "TC": "Technical component."
+  }
+}
