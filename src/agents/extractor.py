@@ -7,7 +7,7 @@ from src.state import AgentState, ExtractedEntity
 # Auto-detect: use Groq in the cloud, Ollama locally
 if os.environ.get("GROQ_API_KEY"):
     from langchain_groq import ChatGroq
-    llm = ChatGroq(model="llama3-8b-8192", temperature=0)
+    llm = ChatGroq(model="llama-3.1-8b-instant", temperature=0)
 else:
     from langchain_ollama import ChatOllama
     llm = ChatOllama(model="qwen2.5:1.5b", temperature=0)
