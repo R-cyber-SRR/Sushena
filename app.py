@@ -18,7 +18,26 @@ from firebase_admin import credentials, auth, firestore
 SERVICE_ACCOUNT_PATH = os.environ.get("FIREBASE_CREDENTIALS", "firebase-credentials.json")
 
 if not firebase_admin._apps:
-    cred = credentials.Certificate(SERVICE_ACCOUNT_PATH)
+    try:
+        if SERVICE_ACCOUNT_PATH.strip().startswith("{"):
+            raw_content = SERVICE_ACCOUNT_PATH
+        else:
+            with open(SERVICE_ACCOUNT_PATH, "r") as f:
+                raw_content = f.read()
+                
+        # Load JSON with strict=False to allow unescaped newlines/control characters
+        cred_dict = json.loads(raw_content, strict=False)
+        
+        # Ensure private key newlines are properly formatted if double-escaped
+        if "private_key" in cred_dict and "\\n" in cred_dict["private_key"]:
+            cred_dict["private_key"] = cred_dict["private_key"].replace("\\n", "\n")
+            
+        cred = credentials.Certificate(cred_dict)
+    except Exception as e:
+        print(f"Failed to parse Firebase credentials robustly: {e}")
+        # Fallback to standard initialization
+        cred = credentials.Certificate(SERVICE_ACCOUNT_PATH)
+
     firebase_admin.initialize_app(cred)
 
 # Initialize Firestore
