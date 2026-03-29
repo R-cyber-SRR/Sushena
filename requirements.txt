@@ -2,6 +2,7 @@ langgraph
 langchain-core
 langchain-ollama
 langchain-groq
+langchain-openai
 pydantic
 python-dotenv
 typing_extensions
