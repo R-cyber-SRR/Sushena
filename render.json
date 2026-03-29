@@ -9,6 +9,10 @@
         {
           "key": "GROQ_API_KEY",
           "value": "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"
+        },
+        {
+          "key": "GITHUB_TOKEN",
+          "value": "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"
         }
       ]
     }
